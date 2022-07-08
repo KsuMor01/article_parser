@@ -16,14 +16,13 @@ class ArticleParser(object):
         self.args = {}  # input settings arguments
 
     def get_args(self):
-        """Gets a URL from terminal command"""
+        """Gets a URL from terminal command and settings from settings.txt"""
 
-        parser = argparse.ArgumentParser(description='URL parser.This application provides a tool to get an article text from an URl.')
-        parser.add_argument('--url', default='https://lenta.ru/news/2022/07/08/zheltiy/',
-                            type=str, help='input URL')
+        parser = argparse.ArgumentParser(description='URL parser.This application provides a tool to get '
+                                                     'an article text from an URl.')
+        parser.add_argument('--url', type=str, help='input URL')
 
         args = parser.parse_args()
-        # print('URL: ', args.url)
         self.url = args.url
 
         with open('settings.txt', 'r') as f:
@@ -88,6 +87,7 @@ class ArticleParser(object):
             self.add_word(word)
 
     def preprocess_link(self, paragraph):
+        """Finds all links in paragraph and makes them absolute if not"""
         links = {}
         for link in paragraph.find_all('a'):
             #  make link absolute if it is not
@@ -133,7 +133,6 @@ class ArticleParser(object):
             os.makedirs(outputdir)
         filepath = outputdir + filename
         with open(outputdir + filename, 'w') as f:
-            # print(self.formatted_text)
             f.writelines(self.formatted_text)
             print('Article is written in ', filepath)
 
